@@ -1,0 +1,8 @@
+    1  git clone https://github.com/nowickazuzanna/wsb_pai_dlinz_2_K15_Inf.git
+    2  ls
+    3  cd wsb_pai_dlinz_2_K15_Inf/
+    4  ls
+    5  alias c=clear
+    6  c
+    7  history
+    8  history > filehistory
