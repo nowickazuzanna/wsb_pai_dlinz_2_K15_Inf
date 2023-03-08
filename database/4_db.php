@@ -23,7 +23,7 @@
       data urodzenia: $user[birthday]
       <hr>
       
-    USER; //  wyswieta tekst i rozpoznaje zmienne here dog jest cudzysowem
+    USER; //  wyswieta tekst i rozpoznaje zmienne heredoc jest cudzysowem
   }
 
 
