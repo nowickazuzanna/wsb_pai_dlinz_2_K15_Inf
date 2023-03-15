@@ -17,7 +17,11 @@
 
         require "./skrypty/lista.php";
         //require_once "./skrypty/lista.php"; // wymagamy danego pliku 
-      //  @require "./skrypty/lista1.php"; // nie dostanniemy ostrzezenia tylko fatal error i nie wyswietli sie kod
+       // @require "./skrypty/lista1.php"; // nie dostanniemy ostrzezenia tylko fatal error i nie wyswietli sie kod
+    
+    
+    
+    
     ?>
     <h4>Koniec strony</h4>
 </body>
