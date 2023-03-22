@@ -13,7 +13,8 @@
    <?php
        require_once"../skrypty/connect.php";
 
-       $sql = "SELECT * FROM users U inner join cities C on C.id = U.city_id inner join states S on S.id = C.state_id inner join countries co on S.country_id = co.id;"; 
+       $sql = "SELECT U.id, firstName, lastName, city, state, birthday FROM users U inner join cities C on C.id = U.city_id inner join states S on S.id = C.state_id;"; 
+      //echo $sql;
 
        $result = $conn->query($sql);
         
@@ -25,11 +26,16 @@
           <th>Data urodzenia</th>
           <th>Miasto</th>
           <th>Wojewodztwo</th>
-          <th>Panstwo</th>
+
        </tr>
        USERSTABLE;
-    
- 
+
+       if(!$result || mysqli_num_rows($result) == 0){
+
+         echo '<tr><td colspan="7">brak wynikow</td></tr>';
+
+       }
+       else{
        while($user = $result->fetch_assoc()){
         echo <<< USERSTABLE
          <tr>
@@ -38,11 +44,28 @@
             <td>$user[birthday]</td>
             <td>$user[city]</td>
             <td>$user[state]</td>
-            <td>$user[country]<td>
+            <td><a href="../skrypty/delete_user.php?deleteUserId=$user[id]">Usun</a></td>
+            <td><a href="../skrypty/wyswietl_tabele.php?miasta=$cities">Wyswietl</a></td>
          <tr>
          USERSTABLE;   
        }
+      }
+
        echo "</table>";
-    ?>
+       if(isset ($_GET['deleteUser'])){
+
+         if($_GET["deleteUser"] != 0){
+           echo "<hr>usunieto uzytkownika o id = $_GET[deleteUser]";
+
+         } else {
+         echo "<hr>nieusunieto uzytkownika o id = $_GET[deleteUser]";
+
+       }
+      }
+  ?>
+
+
 </body>
 </html>
+
+
