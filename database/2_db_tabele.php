@@ -9,12 +9,15 @@
 </head>
 </body>
    <h4>Uzytkownicy</h4>
+   <td><a href="../skrypty/wyswietl_tabele.php">Wyswietl miasta</a></td><br>
+   <br>
+   
    
    <?php
        require_once"../skrypty/connect.php";
 
        $sql = "SELECT U.id, firstName, lastName, city, state, birthday FROM users U inner join cities C on C.id = U.city_id inner join states S on S.id = C.state_id;"; 
-      //echo $sql;
+       //echo $sql;
 
        $result = $conn->query($sql);
         
@@ -45,7 +48,7 @@
             <td>$user[city]</td>
             <td>$user[state]</td>
             <td><a href="../skrypty/delete_user.php?deleteUserId=$user[id]">Usun</a></td>
-            <td><a href="../skrypty/wyswietl_tabele.php?miasta=$cities">Wyswietl</a></td>
+    
          <tr>
          USERSTABLE;   
        }
@@ -62,7 +65,8 @@
 
        }
       }
-  ?>
+   ?>
+
 
 
 </body>
