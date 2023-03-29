@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,9 +14,14 @@
    <h4>Uzytkownicy</h4>
    <td><a href="../skrypty/wyswietl_tabele.php">Wyswietl miasta</a></td><br>
    <br>
-   
-   
    <?php
+
+       //ehco $_SESSION["error"];
+       if (isset($_SESSION["error"])){
+        echo $_SESSION["error"];
+        unset($_SESSION["error"]);
+
+       }
        require_once"../skrypty/connect.php";
 
        $sql = "SELECT U.id, firstName, lastName, city, state, birthday FROM users U inner join cities C on C.id = U.city_id inner join states S on S.id = C.state_id;"; 
@@ -48,6 +56,7 @@
             <td>$user[city]</td>
             <td>$user[state]</td>
             <td><a href="../skrypty/delete_user.php?deleteUserId=$user[id]">Usun</a></td>
+            <td><a href="./2_db_tabele.php?updateUserId=$user[id]">Edytuj</a></td>
     
          <tr>
          USERSTABLE;   
@@ -65,9 +74,51 @@
 
        }
       }
+//autofocus-pole od razu aktywne
+
+      if (isset($_GET["addUserForm"])){
+        echo <<< ADDUSERFORM
+          <h4>Dodawanie uzytkownika</h4>
+          <form action="../skrypty/add_user.php" method="post">
+             <input type="text" name="firstName" placeholder="Podaj imie" autofocus><br><br> 
+             <input type="text" name="lastName" placeholder="Podaj nazwisko"><br><br> 
+             <select name="city_id">
+    ADDUSERFORM;
+
+            $sql = "SELECT * from cities";
+            $result = $conn->query($sql);
+            while($row = mysqli_fetch_array($result)){ //($city = $result->fetch_assoc())
+              echo "<option value='$row[id]'>$row[city]</option>"; // value-przesyla id // echo"<option value=\"$city[id]\">$city[city]</option>";
+            }
+
+            //select/option cities
+            /*
+            while($row = mysqli_fetch_array($result)){
+              echo "<option value='$row[id]>$row[city]</option>";
+            }
+            */
+
+         echo <<< ADDUSERFORM
+             </select>
+             <input type="date" name="birthday">Data urodzenia<br><br>
+             <input type="submit" value="Dodaj uzytkownika">
+          </form>
+   ADDUSERFORM;
+      }else{
+        echo '<hr><a href="./2_db_tabele.php?addUserForm=1">Dodaj uzytkownika</a>';
+
+
+      }
+
+//formularz bedzie mial value, uzytkownik bedize mial..., edytujemy wszystkie pola
+      if (isset($_GET["updateUserId"])){
+        echo <<< UPDATEUSERFORM
+          <h4>Aktualizacja uzytkownika</h4>
+    UPDATEUSERFORM;
+
+
+      }
    ?>
-
-
 
 </body>
 </html>
