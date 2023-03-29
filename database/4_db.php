@@ -12,7 +12,7 @@
   require_once "../skrypty/connect.php";
   $sql = "SELECT * FROM `users`;";
   $result = $conn->query ($sql); // przechowujemy obiekt, result - obiekt
-  $user = $result->fetch_assoc(); // tablica asocjacyjna
+  //$user = $result->fetch_assoc(); // tablica asocjacyjna
   //print_r($user);
   //echo "imie i nazwisko: " . $user["firstName"] . " " . $user["lastName"] . "<br>";
 

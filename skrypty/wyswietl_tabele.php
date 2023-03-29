@@ -18,7 +18,7 @@
        $result = $conn->query($sql);
       
        echo <<< USERSTABLE
-         <table border=1>
+         <table>
             <tr>
               <th>Id</th>
               <th>Wojewodztwo</th>

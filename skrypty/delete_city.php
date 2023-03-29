@@ -6,9 +6,6 @@
   $conn->query($sql);
   $deleteCity = 0;
 
-
- // echo $conn->affected_rows ;
-
   
   if($conn->affected_rows != 0){
     echo "usunieto rekord";
