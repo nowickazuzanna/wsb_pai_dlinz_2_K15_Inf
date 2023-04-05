@@ -100,10 +100,10 @@
             }
             */
 
-         echo <<< ADDUSERFORM
+             echo <<< ADDUSERFORM
              </select>
              <input type="date" name="birthday">Data urodzenia<br><br>
-             <input type="checkbox" name="Regulamin" checked >Regulamin<br><br>
+             <input type="checkbox" name="term" checked> Regulamin<br><br>
              <input type="submit" value="Dodaj uzytkownika">
              
           </form>
@@ -111,10 +111,19 @@
       }else{
         echo '<hr><a href="./2_db_tabele.php?addUserForm=1">Dodaj uzytkownika</a>';
 
-
+      }
+/*
+      if (isset($_GET["updateUserId"])){
+        echo <<< UPDATEUSERFORM
+          <h4>Aktualizacja użytkownika</h4>
+  UPDATEUSERFORM;
       }
 
-//formularz bedzie mial value, uzytkownik bedize mial..., edytujemy wszystkie pola
+*/
+
+
+
+
 
 //aktualizacja uzytkownika
       if (isset($_GET["updateUserId"])){
@@ -133,12 +142,10 @@
 
             $sql = "SELECT * from cities";
             $result = $conn->query($sql);
-            /*
-            while($row = mysqli_fetch_array($result)){ //($city = $result->fetch_assoc())
-              echo "<option value='$row[id]'>$row[city]</option>"; // value-przesyla id // echo"<option value=\"$city[id]\">$city[city]</option>";
-            }
-            */
-
+           
+            //while($row = mysqli_fetch_array($result)){ //($city = $result->fetch_assoc())
+             // echo "<option value='$row[id]'>$row[city]</option>"; // value-przesyla id // echo"<option value=\"$city[id]\">$city[city]</option>";
+           // }
             
             while($city = $result->fetch_assoc()){
               //echo "<option value='$row[id]>$row[city]</option>";
@@ -151,19 +158,19 @@
               echo"<option value=\"$city[id] \">$city[city]</option>";
 
              }
-
             }
             
-
          echo <<< UPDATEUSERFORM
-             </select>
+             </select><br><br>
              <input type="date" name="birthday" value="$updateUser[birthday]" >Data urodzenia<br><br>
              <input type="submit" value="Aktualizuj uzytkownika">
           </form>
    UPDATEUSERFORM;
 
       }
+
       $conn->close();
+
    ?>
 
 </body>

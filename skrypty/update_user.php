@@ -1,6 +1,6 @@
 <?php
 session_start();
- print_r($_POST);
+ //print_r($_POST);
  foreach ($_POST as $key => $value){
     //echo "$key: $value<br>"; //wyswietla tablice
     if (empty($value)){
@@ -16,7 +16,7 @@ session_start();
 
  $sql ="UPDATE `users` SET `city_id` = '$_POST[city_id]', `firstName` = '$_POST[firstName]', `lastName` = '$_POST[lastName]', `birthday` = '$_POST[birthday]' WHERE `users`.`id` = $_SESSION[updateUserId];";
 
- echo $sql;
+// echo $sql;
  $conn->query($sql); //wyslanie zapytania
  unset($_SESSION["updateUserId"]);
 
