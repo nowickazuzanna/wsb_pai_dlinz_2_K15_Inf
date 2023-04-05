@@ -111,13 +111,55 @@
       }
 
 //formularz bedzie mial value, uzytkownik bedize mial..., edytujemy wszystkie pola
+
+//aktualizacja uzytkownika
       if (isset($_GET["updateUserId"])){
+        $sql = "SELECT * FROM `users`WHERE id=$_GET[updateUserId];";
+        $result = $conn->query($sql);
+        $updateUser = $result->fetch_assoc();
+        $_SESSION["updateUserId"] = $_GET["updateUserId"];
+
         echo <<< UPDATEUSERFORM
           <h4>Aktualizacja uzytkownika</h4>
+          <form action="../skrypty/update_user.php" method="post">
+             <input type="text" name="firstName" placeholder="Podaj imie" value="$updateUser[firstName]" autofocus><br><br> 
+             <input type="text" name="lastName" placeholder="Podaj nazwisko" value="$updateUser[lastName]" ><br><br> 
+             <select name="city_id">
     UPDATEUSERFORM;
 
+            $sql = "SELECT * from cities";
+            $result = $conn->query($sql);
+            /*
+            while($row = mysqli_fetch_array($result)){ //($city = $result->fetch_assoc())
+              echo "<option value='$row[id]'>$row[city]</option>"; // value-przesyla id // echo"<option value=\"$city[id]\">$city[city]</option>";
+            }
+            */
+
+            
+            while($city = $result->fetch_assoc()){
+              //echo "<option value='$row[id]>$row[city]</option>";
+             // echo"<option value=\"$city[id]\">$city[city]</option>";
+
+             if($updateUser["city_id"] == $city["id"]){
+              echo"<option value=\"$city[id] \" selected>$city[city]</option>";
+
+             }else{
+              echo"<option value=\"$city[id] \">$city[city]</option>";
+
+             }
+
+            }
+            
+
+         echo <<< UPDATEUSERFORM
+             </select>
+             <input type="date" name="birthday" value="$updateUser[birthday]" >Data urodzenia<br><br>
+             <input type="submit" value="Aktualizuj uzytkownika">
+          </form>
+   UPDATEUSERFORM;
 
       }
+      $conn->close();
    ?>
 
 </body>
