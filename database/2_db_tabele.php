@@ -83,6 +83,8 @@
              <input type="text" name="firstName" placeholder="Podaj imie" autofocus><br><br> 
              <input type="text" name="lastName" placeholder="Podaj nazwisko"><br><br> 
              <select name="city_id">
+
+
     ADDUSERFORM;
 
             $sql = "SELECT * from cities";
@@ -101,7 +103,9 @@
          echo <<< ADDUSERFORM
              </select>
              <input type="date" name="birthday">Data urodzenia<br><br>
+             <input type="checkbox" name="Regulamin" checked >Regulamin<br><br>
              <input type="submit" value="Dodaj uzytkownika">
+             
           </form>
    ADDUSERFORM;
       }else{

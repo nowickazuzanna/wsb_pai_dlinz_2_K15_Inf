@@ -1,16 +1,33 @@
 <?php
 session_start();
- // print_r($_POST);
+  //print_r($_POST);
+ $error = 0;
  foreach ($_POST as $key => $value){
     //echo "$key: $value<br>"; //wyswietla tablice
     if (empty($value)){
       //echo "$key<br>";
-      $_SESSION["error"] = "Wypelnij wszystkie pola";
-      echo "<script>history.back();</script>";
+      //$_SESSION["error"] = "Wypelnij wszystkie pola";
+      //echo "<script>history.back();</script>";
+      //exit();
+      echo "<script>history.back();</script";
       exit();
+      $error++;
     }
  }
  
+ if (!isset($_POST["Regulamin]"])){
+   $_SESSION["error"] = "zatwierdz regulamin!";
+   $error++;
+   
+ }
+
+
+ if($error != 0){
+   echo "<script>history.back();</script";
+   exit();
+
+ }
+
  require_once "./connect.php";
  $sql = "INSERT INTO `users` (`id`, `city_id`, `firstName`, `lastName`, `birthday`) VALUES (NULL, '$_POST[city_id]', '$_POST[firstName]', '$_POST[lastName]', '$_POST[birthday]');";
  $conn->query($sql); //wyslanie zapytania
