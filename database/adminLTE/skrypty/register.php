@@ -49,7 +49,65 @@ session_start();
         //exit();
     }
 
-    
+
+
+    /*
+    if($_POST["email1"] == $_POST["email"]){
+        $error = 1;
+       // echo "<script>history.back();</script>";
+        $_SESSION["error"] = "Zduplikowane adresy mail";
+        //exit();
+    }
+    */
+
+    /*
+    mysqli_query('INSERT INTO ...');
+    if (mysqli_errno() == 1062) {
+    print 'duplikat!';
+    }
+    */
+
+
+
+
+
+
+
+    /* ------------------------------------------------
+    require_once "./connect.php";
+    $duplicate = mysqli_query($conn, "SELECT * from users where email = $_POST[email1] ");
+    if (mysqli_num_rows($duplicate) > 0){
+        $error = 1;
+        //$duplicate = 1;
+       // echo "<script>history.back();</script>";
+        $_SESSION["error"] = "Zduplikowane adresy mail";
+        //exit();
+
+       // header("Location: index.php?message=User name or Email id already exists.");
+       //$duplicate=mysqli_query($conn,"SELECT * from 'users' where email='$email'");
+    }
+    */
+
+
+
+
+    /*
+    //mysqli_query('INSERT INTO `users` (`email`, `city_id`, `firstName`, `lastName`, `birthday`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, current_timestamp());');
+    if (mysqli_errno($conn) == 1062)
+    {
+       //print 'no way!'; 
+
+       $error = 1;
+       // echo "<script>history.back();</script>";
+        $_SESSION["error"] = "Adresy email sa zduplikowane";
+    }
+    */
+
+
+
+
+
+
 
     if($error != 0 ){
         echo "<script>history.back();</script>";
