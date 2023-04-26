@@ -1,10 +1,10 @@
 
 <?php
-//echo "<pre>";
+echo "<pre>";
 
-  //print_r($_POST);
+  print_r($_POST);
 
-//echo "</pre>";
+echo "</pre>";
 
 //1.regulamin nie zaznaczony
 //2.adres mail rozny
@@ -35,6 +35,12 @@ session_start();
 	}
 
 
+    if (!isset($_POST["gender"])){
+		$_SESSION["error"] = "Wybierz płeć!";
+		$error++;
+	}
+
+
     if($_POST["password1"] != $_POST["password2"]){
         $error = 1;
         //echo "<script>history.back();</script>";
@@ -51,14 +57,19 @@ session_start();
 
 
 
+
+
+
+    
     /*
-    if($_POST["email1"] == $_POST["email"]){
+    if($_POST["email1"] == $_POST["email1"]){
         $error = 1;
        // echo "<script>history.back();</script>";
         $_SESSION["error"] = "Zduplikowane adresy mail";
         //exit();
     }
     */
+
 
     /*
     mysqli_query('INSERT INTO ...');
@@ -73,7 +84,8 @@ session_start();
 
 
 
-    /* ------------------------------------------------
+    /*
+    //------------------------------------------------
     require_once "./connect.php";
     $duplicate = mysqli_query($conn, "SELECT * from users where email = $_POST[email1] ");
     if (mysqli_num_rows($duplicate) > 0){
@@ -102,6 +114,7 @@ session_start();
         $_SESSION["error"] = "Adresy email sa zduplikowane";
     }
     */
+
 
 
 
@@ -144,13 +157,45 @@ session_start();
 	}
 */
 
+
+    require_once "./connect.php";
+
+    $sql = "SELECT * FROM users WHERE email = ? ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('s', $_POST["email1"]);
+    $stmt->execute();
+    $result= $stmt->get_result();
+
+    if ($result->num_rows != 0 ){
+        $_SESSION["error"] = "Mail $_POST[email1] jest juz używany!";
+        echo "<script>history.back();</script>";
+        exit();
+    }
+    //header("location: ../pages/register.php");
+
+
+
+
+
 	require_once "./connect.php";
-	$stmt = $conn->prepare("INSERT INTO `users` (`email`, `city_id`, `firstName`, `lastName`, `birthday`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, current_timestamp());");
+	$stmt = $conn->prepare("INSERT INTO `users` (`email`, `city_id`, `firstName`, `lastName`, `birthday`, `gender`, `avatar`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?,  current_timestamp());");
 
 
     $pass = password_hash( password: '$_POST["password1"]', algo: PASSWORD_ARGON2ID);
 
-	$stmt->bind_param('sissss', $_POST["email1"], $_POST["city_id"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $pass);
+    /*
+    if($_POST['gender'] == 'm' )
+    {
+        $avatar = 'men.jpg';
+
+    }else{
+        $avatar = 'women.jpg';
+    }
+    */
+
+    $avatar = ($_POST["gender"] == 'm') ? './jpg.man.png' : './jpg.woman.png' ;
+
+	$stmt->bind_param('sissssss', $_POST["email1"], $_POST["city_id"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $_POST["gender"], $avatar, $pass);
 
 	$stmt->execute();
 
@@ -167,7 +212,7 @@ session_start();
         $_SESSION["error"] = "Nie udalo sie dodac rekordu ";
     }
 
-    header("location: ../pages/register.php");
+    //header("location: ../pages/register.php");
 
     /*
     echo "<pre>";
