@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +20,82 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <!-- /.login-logo -->
+  <?php
+
+  /*
+  session_start();
+  if (isset($_SESSION["error"])) {
+      echo "<div class='callout callout-danger'>";
+      echo "<h5>Błąd!</h5>";
+  
+      foreach ($_SESSION["error"] as $key => $value) {
+          echo "<p>$value</p>";
+      }
+  
+      echo "</div>";
+      unset($_SESSION["error"]);
+  }
+
+*/
+
+    
+    if (isset($_GET["error"])){
+           echo <<< ERROR
+        <div class="callout callout-danger">
+                   <h5>Błąd!</h5>
+                   <p>$_GET[error]</p>
+                 </div>
+ ERROR;
+ 
+     }
+
+
+/*
+  if(isset($_GET["error"])){
+    echo <<< ERROR
+    <div class="callout callout-danger"> 
+       <h5> Błąd!</h5>
+       <p>$_GET[error]</p>
+   </div>
+ERROR;
+  }
+*/
+
+
+/*
+  if(isset($_SESSION["error"] )){
+
+  
+    foreach($_SESSION["error"] as $value){
+      echo <<< ERROR
+      <div class="alert alert-danger alert-dismissible"> 
+       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+       <h5><i class="icon fas fa-ban"></i> Uwaga!</h5>
+       $value
+   </div>
+ 
+
+ERROR;
+    }
+    unset($_SESSION["error"]);
+  }
+
+  */
+
+  ?>
+  
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="./" class="h1"><b>Admin</b>LTE</a>
+      <a href="./index.php" class="h1"><b>Admin</b>LTE</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>
 
-      <form action="../index3.html" method="post">
+      
+
+      <form action="../skrypty/login.php" method="post">
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email">
+          <input type="email" class="form-control" placeholder="Podaj email" name="email" autofocus>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -34,7 +103,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password">
+          <input type="password" class="form-control" placeholder="Podaj hasło" name="password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -72,7 +141,7 @@
         <a href="forgot-password.html">I forgot my password</a>
       </p>
       <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
+        <a href="register.php" class="text-center">Register a new membership</a>
       </p>
     </div>
     <!-- /.card-body -->

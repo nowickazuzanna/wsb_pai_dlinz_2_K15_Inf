@@ -1,10 +1,12 @@
 
 <?php
+/*
 echo "<pre>";
 
   print_r($_POST);
 
 echo "</pre>";
+*/
 
 //1.regulamin nie zaznaczony
 //2.adres mail rozny
@@ -55,12 +57,36 @@ session_start();
         //exit();
     }
 
+    //walidacja hasła czy spelnia wymagnia
+/*
+    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\S{8,}$/', $_POST["password1"])) {
+        echo "test";
+
+        $error = 1;
+        $_SESSION["error"] = "Hasło nie spełnia wymagań!";
+    }
+*/
+
+/*
+if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\S{8,}$/', $_POST["password1"])) {
+    $_SESSION["error"] = "Hasło nie spełnia wymagań!";
+    $error++;
+}
+   */
+  
+   
 
 
 
+   //walidacja hasła
+
+if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\S{8,}$/', $_POST["password1"])) {
+	$error = 1;
+	$_SESSION["error"] = "Hasło nie spełnia wymagań!";
+}
 
 
-    
+
     /*
     if($_POST["email1"] == $_POST["email1"]){
         $error = 1;
@@ -194,6 +220,8 @@ session_start();
     */
 
     $avatar = ($_POST["gender"] == 'm') ? './jpg.man.png' : './jpg.woman.png' ;
+
+    
 
 	$stmt->bind_param('sissssss', $_POST["email1"], $_POST["city_id"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $_POST["gender"], $avatar, $pass);
 
