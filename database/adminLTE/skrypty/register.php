@@ -1,58 +1,119 @@
 
 <?php
-/*
-echo "<pre>";
-
-  print_r($_POST);
-
-echo "</pre>";
-*/
 
 //dodac zmienna pomocnicza error (0), jak bedzie blad to 1 
 //jesli error != 0 to cofamy uzytkownika i wyswietlamy komunikat (zmienna sesyjna) o bledzie nad formularzem
   
-session_start();
+
+function sanitizeInput(&$input){
+
+    $input = trim($input);   // nie dziala, dokonczyc i czemu nie dziala trim, moze byc problem z kolejnoscia
+    $input = stripslashes($input);
+    $input = htmlentities($input);
+
+    return $input;
+
+}
+
+//$_POST["firstName"] = sanitizeInput($_POST["firstName"]);
+
+
+echo $_POST["firstName"]." ==> ".sanitizeInput($_POST["firstName"]).", ilośc znaków: ".strlen($_POST["firstName"]);
+
+exit();
+
+
+
+if($_SERVER["REQUEST_METHOD" ] == "POST"){
+    /*
+    echo "<pre>";
+
+   print_r($_POST);
+ 
+   echo "</pre>";
+*/
+
+
+    $required_fields = ["firstName", "lastName", "email1", "email2", "password1", "password2", "birthday", "city_id", "gender"];
+    /*
+     foreach ($required_fields as $key => $value){
+
+        echo "$key: $value<br>";
+     }
+    */
+    
+
+    session_start();
 
     //$error = 0;
-    foreach($_POST as $key => $value){
-        if (empty($value)){
-            $_SESSION["error"] = "Wypełnij wszystkie pola";
-            echo "<script>history.back();</script>";
-            exit(); //przerywa wykonywanie skryptu
+
+   // $errors[] = ""; //tak nie mozna, bo ta tablica ma od razu pusty element
+
+    $errors = [];
+
+
+    foreach($required_fields as $value){
+        if (empty($_POST[$value])){
+            $errors[] = "Pole <b>$value</b> jest wymagane!";
         }
     }
 
-    $error = 0;
 
-    if (!isset($_POST["terms"])){
-		$_SESSION["error"] = "Zatwierdź regulamin!";
-		$error++;
-	}
-
-    if (!isset($_POST["gender"])){
-		$_SESSION["error"] = "Wybierz płeć!";
-		$error++;
-	}
-
-    if($_POST["password1"] != $_POST["password2"]){
-        $error = 1;
-        //echo "<script>history.back();</script>";
-        $_SESSION["error"] = "Hasla sa rozne";
-        //exit();
-    }
-    
     if($_POST["email1"] != $_POST["email2"]){
-        $error = 1;
-        $_SESSION["error"] = "Adresy email sa rozne";
+        //$error = 1;
+        $errors[] = "Adresy email sa rozne";
+    }
+
+    
+    if($_POST["additional_email1"] != $_POST["additional_email2"]){
+
+        $errors[] = "Adresy dodatkowe email sa rozne";
+    }else{
+
+        if(empty($_POST["additional_email1"])){
+
+            $_POST["additional_email1"] = NULL;
+        }
     }
 
  
-//walidacja hasła
+    if($_POST["password1"] != $_POST["password2"]){
+        
+        //echo "<script>history.back();</script>";
+        $errors[] = "Hasla sa rozne";
+        //exit();
+    }else{
 
-if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\S{8,}$/', $_POST["password1"])) {
-	$error = 1;
-	$_SESSION["error"] = "Hasło nie spełnia wymagań!";
-}
+        //walidacja hasła
+
+         if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\S{8,}$/', $_POST["password1"])) {
+
+	     $errors[] = "Hasło nie spełnia wymagań!";
+        }
+
+    }
+    
+
+    if (!isset($_POST["gender"])){
+		$errors[] = "Wybierz płeć!";
+	
+	}
+
+
+    if (!isset($_POST["terms"])){
+		$errors[] = "Zatwierdź regulamin!";
+
+	}
+
+
+    if (!empty($errors)){
+        print_r($errors);
+        $_SESSION["error"] = implode("<br>", $errors);
+        echo "<script>history.back();</script>";
+        exit();
+    
+    }
+
 
 //walidacja hasła v2
 /*
@@ -63,7 +124,8 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
    */
 
 
-    if($error != 0 ){
+    if(!empty($errors)){
+        $_SESSION["error"] = implode("<br>", $errors);
         echo "<script>history.back();</script>";
         exit();
     }
@@ -85,13 +147,21 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
 
 	require_once "./connect.php";
 
-	$stmt = $conn->prepare("INSERT INTO `users` (`email`, `city_id`, `firstName`, `lastName`, `birthday`, `gender`, `avatar`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?,  current_timestamp());");
+    foreach($_POST as $key => $value){
+
+        if(!$_POST["password1"] && !$_POST["password2"]){
+
+            sanitizeInput($_POST["$key"]);
+        }
+    }
+
+	$stmt = $conn->prepare("INSERT INTO `users` (`email`, `additional_email`, `city_id`, `firstName`, `lastName`, `birthday`, `gender`, `avatar`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,  current_timestamp());");
 
     $pass = password_hash( password: '$_POST["password1"]', algo: PASSWORD_ARGON2ID);
 
     $avatar = ($_POST["gender"] == 'm') ? './jpg.man.png' : './jpg.woman.png' ;
 
-	$stmt->bind_param('sissssss', $_POST["email1"], $_POST["city_id"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $_POST["gender"], $avatar, $pass);
+	$stmt->bind_param('ssissssss', $_POST["email1"], $_POST["additional_email1"], $_POST["city_id"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $_POST["gender"], $avatar, $pass);
 
 	$stmt->execute();
 
@@ -104,7 +174,12 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
         $_SESSION["error"] = "Nie udalo sie dodac rekordu ";
     }
 
-    header("location: ../pages/register.php");
+    
+
+
+}
+
+header("location: ../pages/register.php");
 
 
 
