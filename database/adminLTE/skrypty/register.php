@@ -14,7 +14,6 @@ function sanitizeInput(&$input){
 
 //$_POST["firstName"] = sanitizeInput($_POST["firstName"]);
 
-
 //echo $_POST["firstName"]." ==> ".sanitizeInput($_POST["firstName"]).", ilośc znaków: ".strlen($_POST["firstName"]);
 //exit();
 
@@ -125,6 +124,8 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
 
 	require_once "./connect.php";
 
+// sanityzacja danych dokonczyc
+/*
     foreach($_POST as $key => $value){
 
         if(!$_POST["password1"] && !$_POST["password2"]){
@@ -133,9 +134,11 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
         }
     }
 
+*/
+
 	$stmt = $conn->prepare("INSERT INTO `users` (`email`, `additional_email`, `city_id`, `firstName`, `lastName`, `birthday`, `gender`, `avatar`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,  current_timestamp());");
 
-    $pass = password_hash( password: '$_POST["password1"]', algo: PASSWORD_ARGON2ID);
+    $pass = password_hash( $_POST["password1"], PASSWORD_ARGON2ID);
 
     $avatar = ($_POST["gender"] == 'm') ? './jpg.man.png' : './jpg.woman.png' ;
 
@@ -147,6 +150,8 @@ if ($error == 0 && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s])\
   
     if ($stmt->affected_rows == 1 ){
         $_SESSION["success"] = "Dodano uzytkownika $_POST[firstName] $_POST[lastName]";
+        header("location: ../pages");
+        exit();
 
     }else{
         $_SESSION["error"] = "Nie udalo sie dodac rekordu ";

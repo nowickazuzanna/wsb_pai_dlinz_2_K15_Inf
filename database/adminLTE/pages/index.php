@@ -1,5 +1,8 @@
 <?php
 session_start();
+if(isset($_SESSION["logged"]) || session_status() != 2){
+  header("location: ./logged.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,56 +40,40 @@ session_start();
   }
 
 */
-
     
-    if (isset($_GET["error"])){
-           echo <<< ERROR
-        <div class="callout callout-danger">
-                   <h5>Błąd!</h5>
-                   <p>$_GET[error]</p>
-                 </div>
- ERROR;
+    if (isset($_GET["error"]) || isset($_SESSION["error"])){
+        echo '<div class="callout callout-danger">';
+                  echo '<h5>Błąd!</h5>';
+                  echo  '<p>';
+                        if (isset($_GET["error"]))
+                          echo $_GET["error"];
+                        else if (isset($_SESSION["error"])){
+                          echo $_SESSION["error"];
+                          unset($_SESSION["error"]);
+                        }
+           echo "</p>";
+           echo "</div>";
+    
  
      }
 
 
-/*
-  if(isset($_GET["error"])){
-    echo <<< ERROR
-    <div class="callout callout-danger"> 
-       <h5> Błąd!</h5>
-       <p>$_GET[error]</p>
-   </div>
-ERROR;
-  }
-*/
-
-
-/*
-  if(isset($_SESSION["error"] )){
-
-  
-    foreach($_SESSION["error"] as $value){
+     if (isset($_SESSION["success"])){
       echo <<< ERROR
-      <div class="alert alert-danger alert-dismissible"> 
-       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-       <h5><i class="icon fas fa-ban"></i> Uwaga!</h5>
-       $value
-   </div>
- 
-
+   <div class="callout callout-success">
+              <h5>Gratulacje!</h5>
+              <p>$_SESSION[success]</p>
+            </div>
 ERROR;
-    }
-    unset($_SESSION["error"]);
-  }
 
-  */
+    unset($_SESSION["success"]);
 
+}
   ?>
   
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="./index.php" class="h1"><b>Admin</b>LTE</a>
+      <a href="./" class="h1"><b>Admin</b>LTE</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>
